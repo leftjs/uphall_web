@@ -5,7 +5,6 @@
 
 export const GET_FOODS_DATA = 'GET_FOODS_DATA'
 export const PUBLISH_FOOD = 'PUBLISH_FOOD'
-export const UPLOAD_FOOD_PHOTO = 'UPLOAD_FOOD_PHOTO'
 
 export const LOGIN = 'LOGIN'
 export const REGISTER = 'REGISTER'

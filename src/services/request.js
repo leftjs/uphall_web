@@ -29,10 +29,8 @@ export function get(url,params) {
 		url += `?${qs.stringify(params)}`;
 	}
 
-	if (__DEV__) {
-		console.info(`GET: `, url);
-		console.info(`Params: `, params)
-	}
+	console.info(`GET: `, url);
+	console.info(`Params: `, params)
 
 	return fetch(url)
 		.then(filterStatus)
@@ -43,11 +41,9 @@ export function get(url,params) {
 export function post(url, body, headers) {
 	url = urlPrefix + url;
 
-	if (__DEV__) {
-		console.info(`POST: `, url);
-		console.info(`Body: `, body)
-		console.info(`Headers: `, headers)
-	}
+	console.info(`POST: `, url);
+	console.info(`Body: `, body)
+	console.info(`Headers: `, headers)
 
 	return fetch(url, {
 		method: 'POST',
@@ -64,10 +60,8 @@ export function post(url, body, headers) {
 export function upload(url, path) {
 	url = urlPrefix + url;
 
-	if (__DEV__) {
-		console.info(`POST: `, url);
-		console.info(`Body: `, body)
-	}
+	console.info(`POST: `, url);
+	console.info(`Body: `, body)
 
 	return fetch(url, {
 		method: 'POST',

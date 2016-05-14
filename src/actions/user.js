@@ -27,10 +27,3 @@ export const uploadAvatar = createAction(types.UPLOAD_AVATAR, userService.req.up
 		rejected
 	}
 })
-
-export const getUserFromStorage = createAction(types.GET_USER_FROM_STORAGE, userService.storage.getUserFromStorage, ({resolved,rejected}) => {
-	return {
-		resolved,
-		rejected
-	}
-})
