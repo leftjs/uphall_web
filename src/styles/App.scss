@@ -51,7 +51,7 @@
   margin-left: 5px;
 }
 
-.orderListItem {
+.orderListItem, .messageListItem{
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -59,11 +59,23 @@
     width: 80px;
     height: 80px;
   }
-  .orderListItemContent {
+  .name{
+    font-size: 18px;
+  }
+  .orderListItemContent, .messageListItemContent {
     margin-left: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
   }
+}
+
+.messageListItem {
+  img {
+    border-radius: 40px;
+  }
+}
+
+.send{
+  margin-top: 8px;
 }

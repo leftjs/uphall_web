@@ -57,18 +57,15 @@ export function post(url, body, headers) {
 		.then(filterStatus)
 		.then(filterJSON);
 }
-export function upload(url, path) {
+export function upload(url, data) {
 	url = urlPrefix + url;
 
 	console.info(`POST: `, url);
-	console.info(`Body: `, body)
+	console.info(`Body: `, data)
 
 	return fetch(url, {
 		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'multipart/form-data',
-		},
+		body: data
 	})
 		.then(filterStatus)
 		.then(filterJSON);

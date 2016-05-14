@@ -23,8 +23,14 @@ export const req = {
 
 		})
 	},
-	publishFood: (body,{source}) => {
-
+	publishFood: (body) => {
+		var file = body.file
+		delete body.file
+		return requestService.post(`/foods`,body).then((res) => {
+			return requestService.upload(`/foods/${res._id}/upload`,file).then((res) => {
+				console.log(res)
+			})
+		})
 	}
 
 

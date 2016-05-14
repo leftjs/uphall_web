@@ -2,6 +2,8 @@ require('normalize.css/normalize.css');
 require('styles/App.scss');
 
 import React from 'react';
+import moment from 'moment'
+moment.locale('zh_cn')
 import { connect } from 'react-redux';
 import {
 	ButtonGroup,
@@ -29,7 +31,8 @@ import {
 	Thumbnail,
 	Label,
 	Image,
-	Alert
+	Alert,
+	InputGroup
 } from 'react-bootstrap'
 
 
@@ -53,7 +56,15 @@ class AppComponent extends React.Component {
 	    registerName: '',
 	    AlertVisible: false,
 	    alertInfo: '',
-	    selectedMenu: 'home'
+	    selectedMenu: 'home',
+	    upload: {
+		    is_recommended: false,
+		    is_hot: false,
+		    is_breakfast: false,
+		    is_lunch: false,
+		    is_dinner: false
+	    },
+	    word: ''
     };
   }
 
@@ -401,6 +412,14 @@ class AppComponent extends React.Component {
 		this.setState({
 			selectedMenu: 'message'
 		})
+
+		this.props.actions.getMessages()
+	}
+
+	_publishFoodClick = () => {
+		this.setState({
+			selectedMenu: 'foodPublish'
+		})
 	}
 
 	_renderHome = () => {
@@ -477,18 +496,314 @@ class AppComponent extends React.Component {
 			)
 		}
 
+		if (!this.props.user.token) {
+			return (
+				<div><Well bsSize="large">您尚未登录,赶快登录吧~~~~~</Well></div>
+			)
+		}
+
+		if (itemsArr.length === 0) {
+			return (
+				<div><Well bsSize="large">您的订单里空空入也,赶快去下订单吧~~~~~~~~~</Well></div>
+			)
+		}
 
 		return (
-			<ListGroup>
-				<ListGroupItem className="orderList">
+				<ListGroup>
 					{itemsArr}
-				</ListGroupItem>
-			</ListGroup>
+				</ListGroup>
 		)
 	}
 
+	/**
+	 * 消息界面的渲染
+	 * @private
+	 */
 	_renderMessage = () => {
 
+
+		const handleMessageChange = (e) => {
+			this.setState({
+				word: e.target.value
+			})
+		}
+
+		const sendClick = () => {
+
+			if (!this.props.user.token) {
+				this._alertWithInfo("请您先登录")
+				return
+			}
+
+			this.props.actions.postMessage({
+				token: this.props.user.token,
+				content: this.state.word,
+				resolved: () => {
+					this.props.actions.getMessages()
+				}
+			})
+		}
+
+		var itemsArr = []
+		var key = 0
+		for (let item of this.props.message) {
+			itemsArr.push(
+				<ListGroupItem className="messageListItem" key={key++}>
+					<img src={!!item.user.avatar_uri ? item.user.avatar_uri : "http://lorempixel.com/80/80/"} alt=""/>
+					<div className="messageListItemContent">
+						<p className="name">
+							{item.user.name}
+						</p>
+						<p className="content"><strong>说:</strong>{item.content}</p>
+						<p className="createAt"><strong>{moment(item.create_at).fromNow()}</strong></p>
+					</div>
+				</ListGroupItem>
+			)
+		}
+
+		return (
+			<div>
+				<Well>
+					<FormControl type="text" placeholder="请输入您要说的话" onChange={handleMessageChange}></FormControl>
+					<Button onClick={sendClick} className="send">发送</Button>
+				</Well>
+				{itemsArr.length === 0 ? (<Well>现在还没有人留言哦,赶快发一条吧~~~~</Well>) : (
+					<ListGroup>
+						{itemsArr}
+					</ListGroup>)
+				}
+			</div>
+
+		)
+
+	}
+
+
+	/**
+	 * 发布食物界面的渲染
+	 * @returns {XML}
+	 * @private
+	 */
+	_renderPublishFood = () => {
+
+
+		/**
+		 * 选择文件后的处理
+		 * @param e
+		 */
+		const handleFileChange = (e) => {
+			var input = document.querySelector('.pic')
+			var data = new FormData()
+			data.append('file', input.files[0])
+			this.setState({
+				upload: {
+					...this.state.upload,
+					file: data
+				}
+			})
+		}
+
+		/**
+		 * 填写名称时的处理
+		 * @param e
+		 */
+		const handleNameChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					name: e.target.value
+				}
+			})
+		}
+
+		/**
+		 * 填写单价时的处理
+		 * @param e
+		 */
+		const handlePriceChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					price: JSON.parse(`${e.target.value}`)
+				}
+			})
+		}
+
+		/**
+		 * 填写描述时的处理
+		 * @param e
+		 */
+		const handleDescChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					description: e.target.value
+				}
+			})
+		}
+
+		const handleDiscountChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					discount: JSON.parse(`0.${e.target.value}`)
+				}
+			})
+		}
+
+		const handleRecommendChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					is_recommended: JSON.parse(e.target.value)
+				}
+			})
+		}
+
+		const handleHotChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					is_hot: JSON.parse(e.target.value)
+				}
+			})
+		}
+
+		const handleBreakfastChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					is_breakfast: JSON.parse(e.target.value)
+				}
+			})
+		}
+
+		const handleLunchChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					is_lunch: JSON.parse(e.target.value)
+				}
+			})
+		}
+
+		const handleDinnerChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					is_dinner: JSON.parse(e.target.value)
+				}
+			})
+		}
+
+
+		const upload = (e) => {
+			e.preventDefault()
+
+			if (!this.state.upload.file) {
+				alert("请选择文件")
+				return
+			}
+
+			this.props.actions.publishFood(this.state.upload)
+		}
+
+		return (
+			<Form>
+				<FormGroup controlId="name">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>食物名称</ControlLabel>
+						<FormControl type="text" placeholder="请输入食物名称" onChange={handleNameChange}></FormControl>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="desc">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>描述</ControlLabel>
+						<FormControl componentClass="textarea" placeholder="描述" onChange={handleDescChange}/>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="price">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>单价</ControlLabel>
+						<InputGroup>
+							<InputGroup.Addon>￥</InputGroup.Addon>
+							<FormControl type="text" onChange={handlePriceChange}/>
+							<InputGroup.Addon>.00</InputGroup.Addon>
+						</InputGroup>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="discount">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>折扣</ControlLabel>
+						<InputGroup>
+							<InputGroup.Addon>0.</InputGroup.Addon>
+							<FormControl type="text" onChange={handleDiscountChange}/>
+						</InputGroup>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="pic">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>配图</ControlLabel>
+						<InputGroup>
+							<FormControl type="file" className="pic" onChange={handleFileChange}/>
+						</InputGroup>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="is_recommended">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>是否是推荐</ControlLabel>
+						<FormControl componentClass="select" placeholder="is_recommended" onChange={handleRecommendChange}>
+							<option value={false}>否</option>
+							<option value={true}>是</option>
+						</FormControl>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="is_hot">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>是否是热销</ControlLabel>
+						<FormControl componentClass="select" placeholder="is_hot" onChange={handleHotChange}>
+							<option value={false}>否</option>
+							<option value={true}>是</option>
+						</FormControl>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="is_breakfast">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>是否属于早餐</ControlLabel>
+						<FormControl componentClass="select" placeholder="is_breakfast" onChange={handleBreakfastChange}>
+							<option value={false}>否</option>
+							<option value={true}>是</option>
+						</FormControl>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="is_lunch">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>是否属于午餐</ControlLabel>
+						<FormControl componentClass="select" placeholder="is_lunch" onChange={handleLunchChange}>
+							<option value={false}>否</option>
+							<option value={true}>是</option>
+						</FormControl>
+					</Col>
+				</FormGroup>
+				<FormGroup controlId="is_dinner">
+					<Col md={8} mdOffset={2}>
+						<ControlLabel>是否属于晚餐</ControlLabel>
+						<FormControl componentClass="select" placeholder="is_dinner" onChange={handleDinnerChange}>
+							<option value={false}>否</option>
+							<option value={true}>是</option>
+						</FormControl>
+					</Col>
+				</FormGroup>
+
+				<FormGroup>
+					<Col mdOffset={2} md={10}>
+						<Button type="submit" onClick={upload}>
+							发布
+						</Button>
+					</Col>
+				</FormGroup>
+			</Form>
+		)
 	}
 
 
@@ -500,6 +815,8 @@ class AppComponent extends React.Component {
 				return this._renderOrder()
 			case 'message':
 				return this._renderMessage()
+			case 'foodPublish':
+				return this._renderPublishFood()
 			default:
 				return
 		}
@@ -520,6 +837,7 @@ class AppComponent extends React.Component {
 					    <NavItem eventKey={1} onClick={this._homeClick}>首页</NavItem>
 					    <NavItem eventKey={2} onClick={this._orderClick}>订单</NavItem>
 					    <NavItem eventKey={3} onClick={this._messageClick}>消息</NavItem>
+					    <NavItem eventKey={4} onClick={this._publishFoodClick}>发布</NavItem>
 				    </Nav>
 				    {this._renderUserInfo()}
 			    </Navbar.Collapse>
