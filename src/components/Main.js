@@ -705,7 +705,12 @@ class AppComponent extends React.Component {
 				return
 			}
 
-			this.props.actions.publishFood(this.state.upload)
+			this.props.actions.publishFood(this.state.upload,() => {
+				this.props.actions.getFoods()
+				this.setState({
+					selectedMenu: 'home'
+				})
+			})
 		}
 
 		return (
