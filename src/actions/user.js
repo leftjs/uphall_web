@@ -27,3 +27,11 @@ export const uploadAvatar = createAction(types.UPLOAD_AVATAR, userService.req.up
 		rejected
 	}
 })
+
+
+export const logout = createAction(types.LOGOUT, userService.req.logout,({resolved, rejected}) => {
+	return {
+		resolved,
+		rejected
+	}
+})

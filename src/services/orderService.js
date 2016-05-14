@@ -9,11 +9,7 @@ export const req = {
 		return requestService.post('/orders/' + id, {}, {
 			'x-token': token
 		})
-		.then((res) => {
-			return res
-		}).catch((err) => {
-			reject(err)
-		})
+
 	},
 
 	getOrderByUserId: (id) => {

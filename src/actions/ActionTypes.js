@@ -7,9 +7,9 @@ export const GET_FOODS_DATA = 'GET_FOODS_DATA'
 export const PUBLISH_FOOD = 'PUBLISH_FOOD'
 
 export const LOGIN = 'LOGIN'
+export const LOGOUT = 'LOGOUT'
 export const REGISTER = 'REGISTER'
 export const UPLOAD_AVATAR = 'UPLOAD_AVATAR'
-export const GET_USER_FROM_STORAGE = 'GET_USER_FROM_STORAGE'
 
 export const ORDER_FOOD = 'ORDER_FOOD'
 export const GET_ORDER_BY_USERID = 'GET_ORDER_BY_USERID'

@@ -4,9 +4,6 @@
 import * as types from '../actions/ActionTypes'
 
 export default function (state={},action) {
-
-
-
 	const {payload, error, meta = {}, type} = action
 	const {sequence = {},password} = meta
 	if (sequence.type === 'start' || error ) {
@@ -19,6 +16,9 @@ export default function (state={},action) {
 				...state,
 				...payload,
 				re_password: password
+			}
+		case types.LOGOUT:
+			return {
 			}
 		default:
 			return state

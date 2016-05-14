@@ -43,4 +43,27 @@
   width: 30px;
   height: 30px;
   border-radius: 15px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
+.iconText{
+  margin-left: 5px;
+}
+
+.orderListItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  img {
+    width: 80px;
+    height: 80px;
+  }
+  .orderListItemContent {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+  }
 }

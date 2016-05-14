@@ -7,7 +7,7 @@ import * as types from './ActionTypes'
 import {createAction} from 'redux-actions'
 import * as orderService from '../services/orderService'
 
-export const orderFood = createAction(types.ORDER_FOOD, orderService.req.orderFood, ({id},resolved,rejected) =>{
+export const orderFood = createAction(types.ORDER_FOOD, orderService.req.orderFood, ({id,resolved,rejected}) =>{
 return {
 	id,
 	resolved,

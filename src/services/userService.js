@@ -8,13 +8,10 @@ const urlPrefix = config.domain;
 
 export const req = {
 	login: ({username, password}) => {
-
-		storageService.setItem('user', {username, password})
 		return requestService.post('/users/login', {
 			username,
 			password
 		}).then(res => {
-
 			return res
 		})
 	},
@@ -29,6 +26,9 @@ export const req = {
 	},
 	uploadAvatar: ({id,source}) => {
 
+	},
+	logout: () => {
+		return Promise.resolve()
 	}
 
 }
