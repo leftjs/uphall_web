@@ -4,4 +4,4 @@ git pull origin HEAD
 npm install
 npm run dist
 pm2 stop uphall-web -f
-pm2 start ./dist/index.js --node-args="--env=dist" -n uphall-web
+pm2 start ./server.js --node-args="--env=dev" -n uphall-web
