@@ -40,12 +40,12 @@ let config = Object.assign({}, baseConfig, {
 //?a%2C%26b=c%2C%26d     -> { "a,&b": "c,&d" }
 //?{json:5,data:{a:1}}   -> { json: 5, data: { a: 1 } }
 
-
+//?presets[]=es2015,presets[]=stage-0,presets[]=react&plugins[]=transform-runtime
 
 // Add needed loaders to the defaults here
 config.module.loaders.push({
   test: /\.(js|jsx)$/,
-  loader: 'react-hot!babel-loader?presets[]=es2015,presets[]=stage-0,presets[]=react&plugins[]=transform-runtime',
+  loader: 'react-hot!babel-loader',
   include: [].concat(
     config.additionalPaths,
     [ path.join(__dirname, '/../src') ]
