@@ -26,10 +26,26 @@ let config = Object.assign({}, baseConfig, {
   module: defaultSettings.getDefaultModules()
 });
 
+
+//null                   -> {}
+//?                      -> {}
+//?flag                  -> { flag: true }
+//	?+flag                 -> { flag: true }
+//?-flag                 -> { flag: false }
+//?xyz=test              -> { xyz: "test" }
+//	?xyz[]=a               -> { xyz: ["a"] }
+//		?flag1&flag2           -> { flag1: true, flag2: true }
+//?+flag1,-flag2         -> { flag1: true, flag2: false }
+//?xyz[]=a,xyz[]=b       -> { xyz: ["a", "b"] }
+//?a%2C%26b=c%2C%26d     -> { "a,&b": "c,&d" }
+//?{json:5,data:{a:1}}   -> { json: 5, data: { a: 1 } }
+
+
+
 // Add needed loaders to the defaults here
 config.module.loaders.push({
   test: /\.(js|jsx)$/,
-  loader: 'react-hot!babel-loader?{"presets":["es2015", "stage-0", "react"],"plugins":["transform-runtime"]}',
+  loader: 'react-hot!babel-loader?presets[]=es2015,presets[]=stage-0,presets[]=react&plugins[]=transform-runtime',
   include: [].concat(
     config.additionalPaths,
     [ path.join(__dirname, '/../src') ]
