@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export NODE_ENV=production PORT=7878
 git reset --hard
 git pull origin HEAD
 npm install
