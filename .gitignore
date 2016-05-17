@@ -117,7 +117,6 @@ bower_components/
 *.log
 
 build/
-dist/
 ### Windows template
 # Windows image file caches
 Thumbs.db
