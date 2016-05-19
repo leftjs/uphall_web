@@ -60,12 +60,18 @@
   justify-content: flex-start;
   align-items: center;
   img {
-    width: 80px;
     height: 80px;
   }
-  .orderListItemImg {
-    width: 110px;
+  .orderListItemImg{
     height: 110px;
+  }
+  .orderListItemImgContainer {
+    height: 110px;
+    width: 110px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .name{
     font-size: 18px;

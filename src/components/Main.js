@@ -504,7 +504,9 @@ class AppComponent extends React.Component {
 		for (let item of this.props.order) {
 			itemsArr.push(
 				<ListGroupItem className="orderListItem" key={key++}>
-					<img src={!!item.food.pic_url ? item.food.pic_url : "http://lorempixel.com/80/80/"} alt="" className="orderListItemImg"/>
+					<div className="orderListItemImgContainer">
+						<img src={!!item.food.pic_url ? item.food.pic_url : "http://lorempixel.com/80/80/"} alt="" className="orderListItemImg"/>
+					</div>
 					<div className="orderListItemContent">
 						<p className="name">
 							{item.food.name}
