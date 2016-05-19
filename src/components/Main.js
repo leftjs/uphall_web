@@ -121,9 +121,9 @@ class AppComponent extends React.Component {
 			renderArr.push(
 				<div className="tabItem" key={key} onClick={_itemClick}>
 					<img src={!!item.pic_url ? item.pic_url : "http://lorempixel.com/200/200/"} alt=""/>
-					<span className="name">{item.name}</span>
-					<span className="price">{item.price}</span>
-					<span className="address">{item.address}</span>
+					<span className="name">名称:{item.name}</span>
+					<span className="price">单价:{item.price}元</span>
+					<span className="address">出售地址:{item.address}</span>
 					<div><Glyphicon glyph="heart" className="heart"/><span className="like">{item.like}</span></div>
 					<div><Glyphicon glyph="list"/><span className="order">{item.orderCount}</span></div>
 				</div>
@@ -143,6 +143,7 @@ class AppComponent extends React.Component {
 				resolved: () => {
 					this.descClose()
 					this._alertWithInfo("喜欢成功")
+					this.props.actions.getFoods()
 				},
 				rejected: () => {
 					this.descClose()
@@ -159,17 +160,33 @@ class AppComponent extends React.Component {
 				return
 			}
 
+			if (!this.state.orderTime) {
+				this.descClose()
+				this._alertWithInfo("预定失败,请填写预约时间后重试")
+				return
+			}
+
+
+
 			this.props.actions.orderFood({
 				id: data._id,
 				token: this.props.user.token,
+				orderTime: this.state.orderTime,
 				resolved: () => {
 					this.descClose()
 					this._alertWithInfo("预定成功,请到订单列表查看")
+					this.props.actions.getFoods()
 				},
 				rejected: () => {
 					this.descClose()
 					this._alertWithInfo("预定失败,请检查网络或者是否登录....")
 				}
+			})
+		}
+
+		const handleOrderTimeChange = (e) => {
+			this.setState({
+				orderTime: e.target.value
 			})
 		}
 		if (!data) {
@@ -192,6 +209,9 @@ class AppComponent extends React.Component {
 				<p>单价:{data.price}</p>
 				<p>被收藏:{data.like}次</p>
 				<p>预定量:{data.orderCount}次</p>
+				<p>
+					<FormControl type="text" placeholder="预约时间,如12:30" onChange={handleOrderTimeChange} />
+				</p>
 				<p>
 					<Button bsStyle="success" onClick={likeClick}>喜欢</Button>
 					<Button bsStyle="info" className="orderBtn" onClick={orderClick}>预定</Button>
@@ -491,6 +511,8 @@ class AppComponent extends React.Component {
 						</p>
 						<p className="price"><strong>单价:</strong>{item.food.price}</p>
 						<p className="address"><strong>地址:</strong>{item.food.address}</p>
+						<p className="time"><strong>下单时间:</strong>{moment(item.time).fromNow()}</p>
+						{moment(item.orderTime).isAfter(new Date()) ? <p className="orderTime"><strong>预约时间: {moment(item.orderTime).format('YYYY年MM月DD日 HH:mm')}</strong></p> : <p className="orderEnd"><strong>订单已结束</strong></p>}
 					</div>
 				</ListGroupItem>
 			)
@@ -549,7 +571,7 @@ class AppComponent extends React.Component {
 		for (let item of this.props.message) {
 			itemsArr.push(
 				<ListGroupItem className="messageListItem" key={key++}>
-					<img src={!!item.user.avatar_uri ? item.user.avatar_uri : "http://lorempixel.com/80/80/"} alt=""/>
+					<img src={!!item.user.avatar_uri ? item.user.avatar_uri : "http://ww2.sinaimg.cn/large/71ae9b51gw1f3v9p7k91tj20cs0cs74t.jpg"} alt=""/>
 					<div className="messageListItemContent">
 						<p className="name">
 							{item.user.name}
@@ -642,6 +664,15 @@ class AppComponent extends React.Component {
 			})
 		}
 
+		const handleAddressChange = (e) => {
+			this.setState({
+				upload: {
+					...this.state.upload,
+					address: e.target.value
+				}
+			})
+		}
+
 		const handleDiscountChange = (e) => {
 			this.setState({
 				upload: {
@@ -722,9 +753,15 @@ class AppComponent extends React.Component {
 					</Col>
 				</FormGroup>
 				<FormGroup controlId="desc">
+				<Col md={8} mdOffset={2}>
+					<ControlLabel>描述</ControlLabel>
+					<FormControl componentClass="textarea" placeholder="描述" onChange={handleDescChange}/>
+				</Col>
+				</FormGroup>
+				<FormGroup controlId="address">
 					<Col md={8} mdOffset={2}>
-						<ControlLabel>描述</ControlLabel>
-						<FormControl componentClass="textarea" placeholder="描述" onChange={handleDescChange}/>
+						<ControlLabel>地址</ControlLabel>
+						<FormControl type="text" placeholder="请输入销售地址" onChange={handleAddressChange}></FormControl>
 					</Col>
 				</FormGroup>
 				<FormGroup controlId="price">

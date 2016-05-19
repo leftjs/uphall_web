@@ -5,8 +5,10 @@ import * as requestService from './request'
 
 
 export const req = {
-	orderFood: ({id,token}) => {
-		return requestService.post('/orders/' + id, {}, {
+	orderFood: ({id,token,orderTime}) => {
+		return requestService.post('/orders/' + id, {
+			orderTime: orderTime
+		}, {
 			'x-token': token
 		})
 
